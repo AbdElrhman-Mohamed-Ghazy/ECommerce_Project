@@ -1,0 +1,2 @@
+GET {{E-CommerceAPI}}/
+Accept: application/json

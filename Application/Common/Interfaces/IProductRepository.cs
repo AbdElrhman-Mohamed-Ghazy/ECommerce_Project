@@ -1,0 +1,15 @@
+﻿using Domain.Entities.Products;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Application.Common.Interfaces
+{
+    public interface IProductRepository  : IGenericRepository<Product> 
+    {
+        Task<IEnumerable<Product>> GetProductsByCategoryName(string categoryName, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Product>> GetProductsByName(string name, CancellationToken cancellationToken = default);
+    }
+}

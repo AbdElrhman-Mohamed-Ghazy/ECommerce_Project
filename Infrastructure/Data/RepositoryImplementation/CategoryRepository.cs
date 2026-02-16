@@ -20,29 +20,30 @@ namespace Infrastructure.Data.RepositoryImplementation
             _context = context;
             _dbSet = context.Set<Category>();
         }
-        public Task AddAsync(Category entity, CancellationToken cancellationToken = default)
+        public async Task AddAsync(Category entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public Task DeleteAsync(Category entity, CancellationToken cancellationToken = default)
+        public  Task DeleteAsync(Category entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+             _dbSet.Remove(entity);
+            return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        public Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id, cancellationToken);
         }
 
         public async Task<bool> IsExistAsync(Guid categoryId, CancellationToken cancellationToken = default)
@@ -50,14 +51,15 @@ namespace Infrastructure.Data.RepositoryImplementation
            return await _dbSet.AsNoTracking().AnyAsync(g=>g.Id == categoryId, cancellationToken);
         }
 
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+           await  _context.SaveChangesAsync(cancellationToken);
         }
 
-        public Task UpdateAsync(Category entity, CancellationToken cancellationToken = default)
+        public  Task UpdateAsync(Category entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            return Task.CompletedTask;
         }
     }
 }

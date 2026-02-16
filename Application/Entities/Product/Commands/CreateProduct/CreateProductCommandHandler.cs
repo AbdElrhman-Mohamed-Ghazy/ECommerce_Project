@@ -1,11 +1,11 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities.Products;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities.Products;
 
 namespace Application.Entities.Product.Commands.CreateProduct
 {
@@ -13,7 +13,6 @@ namespace Application.Entities.Product.Commands.CreateProduct
     {
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-          
             var product = new Domain.Entities.Products.Product
             {
                 Id = Guid.NewGuid(),

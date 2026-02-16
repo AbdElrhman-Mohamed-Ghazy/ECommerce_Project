@@ -19,8 +19,6 @@
   <ItemGroup>
     <Folder Include="Entities\Cart\Commands\" />
     <Folder Include="Entities\Cart\Queries\" />
-    <Folder Include="Entities\Category\Commands\" />
-    <Folder Include="Entities\Category\Queries\" />
     <Folder Include="Entities\Order\Commands\" />
     <Folder Include="Entities\Order\Queries\" />
     <Folder Include="Entities\OrderItem\Commands\" />

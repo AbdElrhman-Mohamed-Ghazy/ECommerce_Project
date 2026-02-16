@@ -26,10 +26,10 @@ namespace Infrastructure.Data.RepositoryImplementation
             await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public async Task DeleteAsync(Product entity, CancellationToken cancellationToken = default)
+        public  Task DeleteAsync(Product entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Remove(entity);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -48,10 +48,10 @@ namespace Infrastructure.Data.RepositoryImplementation
             await _Context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
+        public  Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Update(entity);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
         public async Task<IEnumerable<Product>> FindAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
         {

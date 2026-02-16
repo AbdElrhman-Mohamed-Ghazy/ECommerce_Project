@@ -25,6 +25,8 @@ namespace Application.Entities.Product.Queries.GetProductsByName
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
+                StockQuantity = p.StockQuantity,
+                CategoryId = p.CategoryId
 
             }).ToList();
         }

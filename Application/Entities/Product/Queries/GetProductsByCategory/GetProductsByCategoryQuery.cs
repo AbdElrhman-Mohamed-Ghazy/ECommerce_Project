@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Product.Queries.GetProductsByCategory
 {
-    public sealed record  GetProductsByCategoryQuery(string Category) : IRequest<List<ProductDto>>
+    public sealed record  GetProductsByCategoryQuery(string CategoryName) : IRequest<List<ProductDto>>
     {
     }
 }

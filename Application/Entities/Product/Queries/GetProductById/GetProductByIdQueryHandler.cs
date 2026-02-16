@@ -27,6 +27,8 @@ namespace Application.Entities.Product.Queries.GetProductById
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                CategoryId = product.CategoryId
 
             };
         }

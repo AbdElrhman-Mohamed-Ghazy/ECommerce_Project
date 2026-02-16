@@ -14,7 +14,7 @@ namespace Application.Entities.Product.Commands.UpdateProduct
     {
         public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = await repository.GetByIdAsync(request.ProductDto.Id, cancellationToken);
+            var product = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (product == null)
             {
                 throw new NotFoundException(nameof(product));

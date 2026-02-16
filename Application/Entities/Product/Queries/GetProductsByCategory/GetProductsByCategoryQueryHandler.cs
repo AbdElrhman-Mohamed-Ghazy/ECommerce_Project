@@ -15,7 +15,7 @@ namespace Application.Entities.Product.Queries.GetProductsByCategory
     {
         public async Task<List<ProductDto>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
         {
-            var product = await repository.GetProductsByCategoryName(request.Category, cancellationToken);
+            var product = await repository.GetProductsByCategoryName(request.CategoryName, cancellationToken);
             if (product == null || !product.Any())
             {
                 throw new NotFoundException(nameof(Product));
@@ -26,7 +26,8 @@ namespace Application.Entities.Product.Queries.GetProductsByCategory
                 Name = p    .Name,
                 Description = p.Description,
                 Price = p.Price,
-
+                StockQuantity = p.StockQuantity,
+                CategoryId = p.CategoryId
             }).ToList();
         }
     }

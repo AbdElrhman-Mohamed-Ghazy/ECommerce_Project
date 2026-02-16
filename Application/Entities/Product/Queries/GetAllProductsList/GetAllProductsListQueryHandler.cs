@@ -24,11 +24,12 @@ namespace Application.Entities.Product.Queries.GetAllProductsList
 
             return products.Select(p => new ProductDto
             {
-                Id = p.Id,
+              Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
-
+                StockQuantity = p.StockQuantity,
+                CategoryId = p.CategoryId
             }).ToList();
         }
     

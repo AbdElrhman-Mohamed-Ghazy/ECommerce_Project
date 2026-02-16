@@ -24,7 +24,7 @@ namespace Application.Entities.Product.Commands.CreateProduct
             RuleFor(x => x.ProductDto.StockQuantity)
                 .GreaterThanOrEqualTo(0);
 
-            RuleFor(x => x.ProductDto.CategoryId) .NotEmpty().WithMessage("Category is required") .MustAsync(async (id, ct) =>
+            RuleFor(x => x.ProductDto.CategoryId).NotEmpty().WithMessage("Category is required").MustAsync(async (id, ct) =>
            await _categoryRepository.IsExistAsync(id, ct)).WithMessage("Category does not exist");
 
         }

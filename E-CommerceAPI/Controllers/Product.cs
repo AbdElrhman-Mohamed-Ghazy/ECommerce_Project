@@ -21,6 +21,7 @@ namespace ECommerceAPI.Controllers
         [HttpGet("GetAllProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllProducts()
         {
             var result = await _mediator.Send(new GetAllProductsListQuery());
@@ -36,18 +37,20 @@ namespace ECommerceAPI.Controllers
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpGet("by-name/{productName:alpha}", Name = "GetProductByName")]
+        [HttpGet("GetProductByName/", Name = "GetProductByName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProductByName(string productName)
         {
             var result = await _mediator.Send(new GetProductsByNameQuery(productName));
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpGet("by-category/{categoryName:alpha}", Name = "GetProductByCategory")]
+        [HttpGet("by-GetProductByCategoryName/", Name = "GetProductByCategoryName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProductByCategory(string categoryName)
         {
             var result = await _mediator.Send(new GetProductsByCategoryQuery(categoryName));
@@ -56,6 +59,8 @@ namespace ECommerceAPI.Controllers
 
         [HttpPost("AddProduct")]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddProduct(ProductDto productDto)
         {
             var command = new CreateProductCommand(productDto);
@@ -66,6 +71,8 @@ namespace ECommerceAPI.Controllers
         [HttpPut("UpdateProductbyId/{productId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] ProductDto productDto)
         {
             var command = new UpdateProductCommand(productId, productDto);
@@ -76,6 +83,7 @@ namespace ECommerceAPI.Controllers
         [HttpDelete("DeleteProductbyId/{productId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid productId)
         {
             var command = new DeleteProductCommand(productId);

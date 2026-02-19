@@ -1,5 +1,4 @@
-﻿using Domain.Entities.Cart;
-using Domain.Entities.Categories;
+﻿using Domain.Entities.Categories;
 using Domain.Entities.Order;
 using System;
 using System.Collections.Generic;

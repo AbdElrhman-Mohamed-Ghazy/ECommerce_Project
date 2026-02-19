@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities.Cart;
+using Domain.Entities;
+using Domain.Entities.CartItems;
 using Domain.Entities.Categories;
 using Domain.Entities.Order;
 using Domain.Entities.Products;

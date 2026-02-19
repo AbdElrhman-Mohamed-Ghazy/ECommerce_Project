@@ -11,5 +11,8 @@ namespace Application.Common.Interfaces
     {
         Task<IEnumerable<Product>> GetProductsByCategoryName(string categoryName, CancellationToken cancellationToken = default);
         Task<IEnumerable<Product>> GetProductsByName(string name, CancellationToken cancellationToken = default);
+         Task<bool> IsExistAsync(Guid Id, CancellationToken cancellationToken = default);
+        Task<decimal> GetProductPriceAsync(Guid productId, CancellationToken ct);
+        Task<int> GetProductQuantityAsync(Guid productId, CancellationToken ct);
     }
 }

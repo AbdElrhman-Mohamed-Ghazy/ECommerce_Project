@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -67,7 +68,22 @@ namespace Infrastructure.Data.RepositoryImplementation
             return await _dbSet.Where(x => x.Name.ToLower() == name.ToLower()).ToListAsync(cancellationToken);
         }
 
-    }
+        public async Task<bool> IsExistAsync(Guid productId, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AsNoTracking().AnyAsync(g => g.Id == productId, cancellationToken);
+        }
+        public async Task<decimal> GetProductPriceAsync(Guid productId, CancellationToken ct)
+        {
+            var product = await _dbSet.AsNoTracking().Select(x => new { x.Id, x.Price }).FirstAsync(x => x.Id == productId, ct);
+            return product.Price;
+        }
+
+       public async Task<int> GetProductQuantityAsync(Guid productId, CancellationToken ct)
+        {
+            var product = await _dbSet.AsNoTracking().Select(x => new { x.Id, x.StockQuantity }).FirstAsync(x => x.Id == productId, ct);
+            return product.StockQuantity;
+        }
+        }
 }
 
 

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Dtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

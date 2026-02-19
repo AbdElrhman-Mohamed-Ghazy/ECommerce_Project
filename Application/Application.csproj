@@ -17,15 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Cart\Commands\" />
-    <Folder Include="Entities\Cart\Queries\" />
     <Folder Include="Entities\Order\Commands\" />
     <Folder Include="Entities\Order\Queries\" />
     <Folder Include="Entities\OrderItem\Commands\" />
     <Folder Include="Entities\OrderItem\Queries\" />
     <Folder Include="Entities\ProductImage\Queries\" />
-    <Folder Include="Entities\CartItem\Commands\" />
-    <Folder Include="Entities\CartItem\Queries\" />
   </ItemGroup>
 
 </Project>

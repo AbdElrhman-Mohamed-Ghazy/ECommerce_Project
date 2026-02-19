@@ -32,6 +32,13 @@ namespace CleanArchitecture_CQRS_inAction.Exceptions
                     Status = StatusCodes.Status404NotFound
                 },
 
+                ValidationFaliedException ex => new ProblemDetails
+                {
+                    Title = "Validation Failed",
+                    Detail = ex.Message,
+                    Status = StatusCodes.Status400BadRequest
+                },
+
                 // حالة أي خطأ غير متوقع آخر
                 _ => new ProblemDetails
                 {

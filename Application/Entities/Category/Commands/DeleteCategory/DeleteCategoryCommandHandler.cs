@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Category.Commands.DeleteCategory
 {
-    public sealed class DeleteCategoryCommandHandler(ICategoryRepository repository) : IRequestHandler<DeleteCategoryCommand>
+    public sealed class DeleteCategoryCommandHandler(ICategoryRepository repository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<DeleteCategoryCommand>
     {
         public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
@@ -20,7 +20,7 @@ namespace Application.Entities.Category.Commands.DeleteCategory
             }
 
             await repository.DeleteAsync(category, cancellationToken);
-            await repository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

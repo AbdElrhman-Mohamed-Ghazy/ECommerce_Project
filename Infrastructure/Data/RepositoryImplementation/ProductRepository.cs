@@ -27,7 +27,7 @@ namespace Infrastructure.Data.RepositoryImplementation
             await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public  Task DeleteAsync(Product entity, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(Product entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Remove(entity);
             return Task.CompletedTask;
@@ -49,7 +49,7 @@ namespace Infrastructure.Data.RepositoryImplementation
             await _Context.SaveChangesAsync(cancellationToken);
         }
 
-        public  Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
+        public Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Update(entity);
             return Task.CompletedTask;
@@ -78,12 +78,23 @@ namespace Infrastructure.Data.RepositoryImplementation
             return product.Price;
         }
 
-       public async Task<int> GetProductQuantityAsync(Guid productId, CancellationToken ct)
+        public async Task<int> GetProductQuantityAsync(Guid productId, CancellationToken ct)
         {
             var product = await _dbSet.AsNoTracking().Select(x => new { x.Id, x.StockQuantity }).FirstAsync(x => x.Id == productId, ct);
             return product.StockQuantity;
         }
+
+        public async Task SetProductQuantityAsync(Guid productId, int quantity, CancellationToken ct)
+        {
+            var product = await _dbSet.FirstAsync(x => x.Id == productId, ct);
+            product.StockQuantity += quantity;
+            _dbSet.Update(product);
         }
+        public async Task<List<Product>> GetAllProductsByIds(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        {
+            return await _Context.Products.Where(x => ids.Contains(x.Id)).ToListAsync(cancellationToken);
+        }
+    }
 }
 
 

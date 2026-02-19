@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Cart.Commands.UpdateCartItemQuantity
 {
-    public sealed class UpdateCartItemQuantityCommandHandler(ICartRepository cartRepository) : IRequestHandler<UpdateCartItemQuantityCommand>
+    public sealed class UpdateCartItemQuantityCommandHandler(ICartRepository cartRepository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<UpdateCartItemQuantityCommand>
     {
         public async Task Handle(UpdateCartItemQuantityCommand request, CancellationToken cancellationToken)
         {
@@ -21,7 +21,7 @@ namespace Application.Entities.Cart.Commands.UpdateCartItemQuantity
           
             cart.UpdateQuantity(request.ProductId, request.Quantity);
             await cartRepository.UpdateAsync(cart, cancellationToken);
-            await cartRepository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

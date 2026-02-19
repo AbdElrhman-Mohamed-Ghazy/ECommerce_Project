@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Entities.Cart.Commands.RemoveItemFromCart
 {
-    public class RemoveItemFromCartCommandHandler(ICartRepository cartRepository) : IRequestHandler<RemoveItemFromCartCommand>
+    public class RemoveItemFromCartCommandHandler(ICartRepository cartRepository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<RemoveItemFromCartCommand>
     {
         public async Task Handle(RemoveItemFromCartCommand request, CancellationToken cancellationToken)
         {
@@ -16,7 +16,7 @@ namespace Application.Entities.Cart.Commands.RemoveItemFromCart
 
             cart.RemoveItem(request.ProductId);
             await cartRepository.UpdateAsync(cart, cancellationToken);
-            await cartRepository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -12,7 +12,5 @@ namespace Application.Common.Interfaces
         Task<Cart?> GetByUserIdAsync(Guid userId, CancellationToken ct);
         Task AddAsync(Cart cart, CancellationToken ct);
         Task UpdateAsync(Cart cart, CancellationToken ct);
-        Task SaveChangesAsync(CancellationToken ct);
-
     }
 }

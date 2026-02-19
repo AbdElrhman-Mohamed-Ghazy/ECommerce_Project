@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Cart.Commands.AddItemToCart
 {
-    public class AddItemToCartCommandHandler(ICartRepository cartrepository, IProductRepository productRepository) : IRequestHandler<AddItemToCartCommand>
+    public class AddItemToCartCommandHandler(ICartRepository cartrepository, IProductRepository productRepository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<AddItemToCartCommand>
     {
        
         public async Task Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace Application.Entities.Cart.Commands.AddItemToCart
             var productPrice = await productRepository.GetProductPriceAsync(request.ProductId, cancellationToken);
              cart.AddItem(request.ProductId, productPrice, request.Quantity);
             await cartrepository.UpdateAsync(cart, cancellationToken);
-            await cartrepository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
         }
     }

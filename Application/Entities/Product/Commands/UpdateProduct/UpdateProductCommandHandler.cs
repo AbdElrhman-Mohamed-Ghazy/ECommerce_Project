@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Product.Commands.UpdateProduct
 {
-    public class UpdateProductCommandHandler(IProductRepository repository) : IRequestHandler<UpdateProductCommand>
+    public class UpdateProductCommandHandler(IProductRepository repository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<UpdateProductCommand>
     {
         public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
@@ -25,7 +25,7 @@ namespace Application.Entities.Product.Commands.UpdateProduct
             product.StockQuantity = request.ProductDto.StockQuantity;
             product.CategoryId = request.ProductDto.CategoryId;
 
-            await repository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

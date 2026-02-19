@@ -14,5 +14,7 @@ namespace Application.Common.Interfaces
          Task<bool> IsExistAsync(Guid Id, CancellationToken cancellationToken = default);
         Task<decimal> GetProductPriceAsync(Guid productId, CancellationToken ct);
         Task<int> GetProductQuantityAsync(Guid productId, CancellationToken ct);
+        Task SetProductQuantityAsync(Guid productId, int quantity, CancellationToken ct);
+        Task<List<Product>> GetAllProductsByIds(IEnumerable<Guid> ids, CancellationToken cancellationToken = default);
     }
 }

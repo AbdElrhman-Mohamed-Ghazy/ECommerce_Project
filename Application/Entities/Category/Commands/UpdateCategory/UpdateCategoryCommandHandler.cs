@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Category.Commands.UpdateCategory
 {
-    public sealed class UpdateCategoryCommandHandler(ICategoryRepository repository) : IRequestHandler<UpdateCategoryCommand>
+    public sealed class UpdateCategoryCommandHandler(ICategoryRepository repository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<UpdateCategoryCommand>
     {
         public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
@@ -20,7 +20,7 @@ namespace Application.Entities.Category.Commands.UpdateCategory
             }
             category.Name = request.CategoryDto.Name;
 
-            await repository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

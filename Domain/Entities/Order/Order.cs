@@ -13,9 +13,26 @@ namespace Domain.Entities.Order
         public string ShippingAddress { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public Order(Guid userId,  string shippingAddress)
+        {
+            UserId = userId;
+            Id  = Guid.NewGuid();
+            Status = OrderStatus.Pending;
+            ShippingAddress = shippingAddress;
+        }
         public OrderStatus Status { get; set; }
 
         public decimal TotalPrice { get; set; }
-        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+        public void AddItem(Guid productId, int quantity, decimal unitPrice)
+        {
+            var items = new OrderItem(productId, quantity, unitPrice);
+            items.Order = this;
+            _items.Add(items);
+            TotalPrice += items.Quantity * items.UnitPrice;
+
+
+        }
+        private readonly List<OrderItem> _items = new();
+        public IReadOnlyCollection<OrderItem> Items => _items;
     }
 }

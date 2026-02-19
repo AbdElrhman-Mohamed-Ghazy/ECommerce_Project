@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 namespace Application.Entities.Category.Commands.CreateCategory
 {
-    public class CreateCategoryCommandHandler(ICategoryRepository categoryRepository) : IRequestHandler<CreateCategoryCommand, Guid>
+    public class CreateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<CreateCategoryCommand, Guid>
     {
         public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
@@ -18,7 +18,7 @@ namespace Application.Entities.Category.Commands.CreateCategory
                 Name=  request.CategoryDto.Name,
             };
            await categoryRepository.AddAsync(category, cancellationToken);
-            await categoryRepository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
             return category.Id;
         }
     }

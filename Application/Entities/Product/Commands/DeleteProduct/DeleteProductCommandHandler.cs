@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Product.Commands.DeleteProduct
 {
-    public sealed class DeleteProductCommandHandler(IProductRepository repository) : IRequestHandler<DeleteProductCommand>
+    public sealed class DeleteProductCommandHandler(IProductRepository repository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<DeleteProductCommand>
     {
         public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         { 
@@ -20,7 +20,7 @@ namespace Application.Entities.Product.Commands.DeleteProduct
             }
 
             await repository.DeleteAsync(product, cancellationToken);
-            await repository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

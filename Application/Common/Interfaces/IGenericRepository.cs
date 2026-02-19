@@ -15,7 +15,5 @@ namespace Application.Common.Interfaces
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
         Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
-        Task SaveChangesAsync( CancellationToken cancellationToken = default);
-
     }
 }

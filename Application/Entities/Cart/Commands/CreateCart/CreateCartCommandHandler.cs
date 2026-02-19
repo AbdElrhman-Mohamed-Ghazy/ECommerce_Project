@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Cart.Commands.CreateCart
 {
-    public sealed class CreateCartCommandHandler(ICartRepository repository) : IRequestHandler<CreateCartCommand, Guid>
+    public sealed class CreateCartCommandHandler(ICartRepository repository, IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<CreateCartCommand, Guid>
     {
         public async Task<Guid> Handle(CreateCartCommand request, CancellationToken cancellationToken)
         {
           var cart=new Domain.Entities.Cart(request.UserId);
            
            await repository.AddAsync(cart, cancellationToken);
-            await repository.SaveChangesAsync(cancellationToken);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
             return cart.Id;
         }
     }

@@ -27,9 +27,7 @@ namespace Infrastructure.Data.RepositoryImplementation
 
         public Task<Order?> GetByUserIdAsync(Guid userId, CancellationToken ct)
         {
-            return _dbSet.Include(o => o.Items)
-                         .ThenInclude(oi => oi.Product)
-                         .FirstOrDefaultAsync(o => o.UserId == userId, ct);
+            return _dbSet.FirstOrDefaultAsync(o => o.UserId == userId, ct);
         }
 
         public Task SaveChangesAsync(CancellationToken ct)
@@ -41,6 +39,20 @@ namespace Infrastructure.Data.RepositoryImplementation
         {
             _dbSet.Update(order);
             return Task.CompletedTask;
+        }
+
+        public async Task<Order?> GetByOrderIdAsync(Guid orderId, CancellationToken ct)
+        {
+            return await _dbSet.FirstOrDefaultAsync(o => o.Id == orderId, ct);
+        }
+
+        public async Task<List<Order>> GetAllAsync(CancellationToken ct)
+        {
+            return await _dbSet.ToListAsync(ct);
+        }
+        public async Task<Order?>GetFullOrderInfoByOrderIdAsync(Guid orderId, CancellationToken ct)
+        {
+            return await _dbSet.Include(o=>o.Items).ThenInclude(i=>i.Product).FirstOrDefaultAsync(o => o.Id == orderId,ct);
         }
     }
 }

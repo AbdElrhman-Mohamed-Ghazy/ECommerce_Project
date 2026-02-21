@@ -17,10 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Order\Queries\" />
     <Folder Include="Entities\OrderItem\Commands\" />
     <Folder Include="Entities\OrderItem\Queries\" />
-    <Folder Include="Entities\ProductImage\Queries\" />
   </ItemGroup>
 
 </Project>

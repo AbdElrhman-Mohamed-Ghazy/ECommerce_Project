@@ -32,6 +32,10 @@ namespace Domain.Entities.Order
 
 
         }
+        public void ChangeStatus(OrderStatus status)
+        {
+            Status = status;
+        }
         private readonly List<OrderItem> _items = new();
         public IReadOnlyCollection<OrderItem> Items => _items;
     }

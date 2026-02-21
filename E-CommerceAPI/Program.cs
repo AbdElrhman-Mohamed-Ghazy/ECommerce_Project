@@ -3,10 +3,11 @@ using Application.Common.Interfaces;
 using CleanArchitecture_CQRS_inAction.Exceptions;
 using FluentValidation;
 using Infrastructure.Data;
+using Infrastructure.Data.RepositoryImplementation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Scrutor;
-using Infrastructure.Data.RepositoryImplementation;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,15 @@ builder.Services.Scan(scan => scan
     .AsImplementedInterfaces()
     .WithScopedLifetime()
 );
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });
+
 //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 //builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

@@ -1,75 +1,241 @@
 # 🛒 E-Commerce API
 
-ASP.NET Core 8.0 backend for an e-commerce system built with a **clear separation of concerns**
-and a **code-first architecture**.  
-The project emphasizes **scalability**, **maintainability**, and **well-structured layers**
-using proven architectural and design patterns.
+Production-ready **ASP.NET Core 8 Web API** for an e-commerce platform built using **Clean Architecture**, **CQRS**, and modern backend best practices.  
+The project focuses on **scalability, maintainability, and layered security**, making it suitable as a real-world backend foundation.
 
 ---
 
-## 🏗 Architecture
+# 🚀 Key Highlights
 
-- Clean Architecture with isolated **API**, **Application**, **Domain**, and **Infrastructure** layers
-- CQRS implementation using MediatR for strict command/query separation
-- Repository and Unit of Work patterns for data persistence and transactional consistency
-- Automatic dependency registration using Scrutor
-- Request validation via FluentValidation integrated through MediatR pipeline behaviors
-- Centralized exception handling with consistent `ProblemDetails` responses
+- Clean Architecture (Domain / Application / Infrastructure / API)
+- CQRS implementation using MediatR
+- Repository + Unit of Work patterns
+- JWT Authentication & Role-Based Authorization
+- Policy-Based Authorization (OwnerOrAdmin)
+- Secure product image storage
+- Order workflow state machine
+- Rate limiting & CORS protection
+- Centralized error handling
+- Validation pipeline with FluentValidation
+- Audit logging for sensitive operations
 
 ---
 
-## ✨ Core Features (Code-Based)
+# 🏗 Architecture
 
-### Products
-- Create, update, delete, and retrieve products
-- Search products by name
-- Filter products by category
+The system follows **Clean Architecture** to keep business logic independent from frameworks and infrastructure.
 
-### Categories
+Project layers:
+
+- **Domain**  
+  Contains core entities, enums, and business rules.
+
+- **Application**  
+  Contains use cases, CQRS handlers, DTOs, interfaces, and validation.
+
+- **Infrastructure**  
+  Implements persistence, repositories, file storage, and external services.
+
+- **API**  
+  Exposes REST endpoints, middleware, authentication, and request pipelines.
+
+---
+
+# 🔄 CQRS Implementation
+
+The project uses **CQRS (Command Query Responsibility Segregation)** with **MediatR**.
+
+- **Commands**
+  - Create / Update / Delete operations
+  - Mutate application state
+
+- **Queries**
+  - Retrieve data
+  - No side effects
+
+This separation improves **maintainability, testability, and scalability**.
+
+---
+
+# 🛍 Core Features
+
+## Products & Categories
+
 - Full CRUD operations
-- Enforced relational integrity with products
-
-### Shopping Cart
-- User-scoped shopping cart
-- Add, update, remove, and clear cart items
-
-### Orders
-- Order lifecycle managed through a finite state workflow:
-  **Pending → Paid → Shipped → Delivered / Cancelled**
-- Stock validation and transactional order creation
-
-### Product Images
-- Upload, retrieve, and delete product images
-- File system–based storage implementation
+- Category-product relationship
+- Filtering & querying capabilities
+- Product image upload support
 
 ---
 
-## 🧰 Technologies
+## 🛒 Shopping Cart
 
-- ASP.NET Core 8.0
-- Entity Framework Core 8.0.24
+- User-specific carts
+- Add / Update / Remove items
+- Persistent cart storage
+
+---
+
+## 📦 Order Management
+
+Atomic order creation with stock validation.
+
+Order lifecycle:
+
+```
+Pending → Paid → Shipped → Delivered
+           ↘
+          Cancelled
+```
+
+Prevents inconsistent states between **orders and inventory**.
+
+---
+
+# 🛡 Security Architecture
+
+Security is implemented using a **defense-in-depth strategy**.
+
+## Authentication
+
+- JWT-based authentication
+- Secure token validation
+- Claims-based identity
+
+## Authorization
+
+- **Role-Based Authorization**
+  - Admin-only endpoints for management
+
+- **Policy-Based Authorization**
+  - Fine-grained access rules
+
+Example policy:
+
+```
+OwnerOrAdmin
+```
+
+Ensures users can only access their own resources.
+
+## IDOR Protection
+
+Ownership checks prevent **Insecure Direct Object Reference attacks**.
+
+---
+
+# ⚡ Infrastructure Hardening
+
+Security protections implemented at the API level:
+
+- Enforced **HTTPS**
+- Strict **CORS configuration**
+- **Rate Limiting** against brute-force or flooding
+- **Input validation** using FluentValidation
+
+---
+
+# 📑 Observability
+
+The system includes monitoring and security auditing features.
+
+- Authentication failure logging
+- Suspicious activity tracking
+- Audit logs for privileged operations
+  - Role changes
+  - Deletions
+  - Admin actions
+
+Each log includes:
+
+- Actor
+- Action
+- Timestamp
+
+---
+
+# 🔄 Transaction Management
+
+A dedicated **Unit of Work** ensures safe database transactions.
+
+Guarantees:
+
+- **Atomicity** → all operations succeed or none are applied
+- **Consistency** → prevents partial writes
+- **Integrity** during complex operations (Orders + Stock updates)
+
+---
+
+# 🧰 Tech Stack
+
+- ASP.NET Core 8
+- Entity Framework Core 8
 - SQL Server
 - MediatR
 - FluentValidation
 - Scrutor
-- Swagger / Swashbuckle
+- JWT Authentication
+- Swagger / OpenAPI
 
 ---
 
-## 🔄 Transaction Management
+# 📄 API Documentation
 
-- Explicit **Unit of Work** implementation
-- Ensures atomic operations across multiple repositories
-- Prevents partial data persistence during order processing
+Swagger UI is enabled for interactive API exploration.
+
+After running the project:
+
+```
+https://localhost:{port}/swagger
+```
 
 ---
-🛠️ Roadmap (Upcoming Features)
-We are constantly improving the system. The following features are planned for future releases:
 
-[ ] Authentication & Authorization: Implementing ASP.NET Core Identity with JWT (JSON Web Tokens) for secure user access.
+# ⚙ Getting Started
 
-[ ] Role-Based Access Control (RBAC): Defining permissions for Customers and Administrators.
+### 1️⃣ Clone the repository
 
-[ ] Caching Layer: Integrating Redis to improve performance for product catalogs.
+```
+git clone https://github.com/yourusername/ecommerce-api.git
+```
 
-[ ] Advanced Searching: Integrating Elasticsearch for faster and more relevant product searches.
+### 2️⃣ Navigate to the project
+
+```
+cd ecommerce-api
+```
+
+### 3️⃣ Update connection string
+
+Configure **SQL Server** connection in:
+
+```
+appsettings.json
+```
+
+### 4️⃣ Run database migrations
+
+```
+dotnet ef database update
+```
+
+### 5️⃣ Run the API
+
+```
+dotnet run
+```
+
+---
+
+# 🎯 Project Goals
+
+This project demonstrates how to build a **secure, scalable backend API** using modern **.NET architecture patterns**.
+
+Key focuses:
+
+- Clean architecture design
+- Secure API development
+- Real-world backend patterns
+- Maintainable and testable codebase
+
+

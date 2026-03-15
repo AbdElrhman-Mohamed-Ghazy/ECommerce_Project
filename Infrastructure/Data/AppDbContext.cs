@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Entities.CartItems;
 using Domain.Entities.Categories;
-using Domain.Entities.Order;
+using Domain.Entities.Orders;
 using Domain.Entities.Products;
 using Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;

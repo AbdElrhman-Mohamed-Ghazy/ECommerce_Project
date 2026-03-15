@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.CartItems;
+using Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; private set; }
         public Guid UserId { get; private set; }
-
+        public User user { get; set; } = null!;
         private readonly List<CartItem> _items = new();
         public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 

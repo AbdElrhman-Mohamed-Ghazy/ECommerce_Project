@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Domain.Entities.Order;
+using Domain.Entities.CartItems;
+using Domain.Entities.Orders;
 using MediatR;
 using System;
 using System.Threading.Tasks;
@@ -20,8 +21,7 @@ namespace Application.Entities.Order.Commands.CreateOrder
             var productIds=cart.Items.Select(i => i.ProductId).ToList();
             var products = await productRepository.GetAllProductsByIds(productIds, cancellationToken);
 
-            var order = new Domain.Entities.Order.Order(request.UserId, request.Address);
-
+            var order = new Domain.Entities.Orders.Order(request.UserId, request.Address);
             using (var trasaction = await unitOfWorkRepository.BeginTransactionAsync(cancellationToken))
             {
                 try

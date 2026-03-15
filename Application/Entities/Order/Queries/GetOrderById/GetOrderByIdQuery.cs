@@ -1,5 +1,5 @@
 using Application.Dtos;
-using Domain.Entities.Order;
+using Domain.Entities.Orders;
 using MediatR;
 
 namespace Application.Entities.Order.Queries.GetOrderById

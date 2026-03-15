@@ -20,6 +20,9 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPost("{productId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImages(Guid productId,
             [FromForm] List<IFormFile> images)
         {
@@ -42,7 +45,11 @@ namespace ECommerceAPI.Controllers
             return Ok("Images uploaded");
         }
 
+
         [HttpGet("{productId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetImages(Guid productId)
         {
             return Ok(await _mediator.Send(
@@ -50,6 +57,9 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpDelete("{imageId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteImage(Guid imageId)
         {
             await _mediator.Send(

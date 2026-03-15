@@ -1,6 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Domain.Entities.Order;
+using Domain.Entities.Orders;
 using MediatR;
 using System;
 using System.Collections.Generic;

@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Domain.Entities.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities.Order
+namespace Domain.Entities.Orders
 {
     public class Order
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public User user { get; set; } = null!;
         public string ShippingAddress { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

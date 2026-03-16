@@ -22,11 +22,6 @@ namespace Application.Entities.Product.Queries.GetAllProductsList
                throw new NotFoundException(nameof(Product));
             }
 
-            return products.Select(p => new ProductDto
-            {
-              Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
                 Price = p.Price,
                 StockQuantity = p.StockQuantity,
                 CategoryId = p.CategoryId

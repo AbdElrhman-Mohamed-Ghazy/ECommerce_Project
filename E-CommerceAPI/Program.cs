@@ -1,13 +1,24 @@
 ﻿using Application.Behaviors;
 using Application.Common.Interfaces;
-using CleanArchitecture_CQRS_inAction.Exceptions;
+using Application.Dtos;
+using Application.Mapping;
+using AutoMapper;
+using Domain.Entities.ApplicationUser;
+using Domain.Entities.Products;
+using ECommerceAPI.Exceptions;
 using FluentValidation;
 using Infrastructure.Data;
 using Infrastructure.Data.RepositoryImplementation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Scrutor;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +31,11 @@ builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddSwaggerGen();
+
+// في الإصدارات الجديدة، الـ Method دي بقت موجودة في AutoMapper مباشرة
+builder.Services.AddAutoMapper(cfg => {
+    // إعدادات إضافية لو حابب
+}, typeof(ProductProfile));
 
 builder.Services.AddMediatR(option =>
 {
@@ -40,6 +55,14 @@ builder.Services.Scan(scan => scan
     .WithScopedLifetime()
 );
 
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
+
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -53,6 +76,104 @@ builder.Services.AddControllers()
 //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 
+builder.Services.Configure<JwtSettings>(
+              builder.Configuration.GetSection("Jwt"));
+
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserService, UserService>();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings!.Issuer,
+        ValidAudience = jwtSettings.Audience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings.Key))
+    };
+});
+
+
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your JWT token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    // Always return 429 when blocked
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.OnRejected = async (context, token) =>
+    {
+        var response = context.HttpContext.Response;
+
+        response.ContentType = "application/json";
+        await response.WriteAsJsonAsync(new
+        {
+            error = "TooManyRequests",
+            message = "Too many attempts. Please try again later.",
+            status = 429
+        }, token);
+    };
+
+    // Policy: max 5 requests per 1 minute per IP
+    options.AddPolicy("AuthLimiter", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
+
 var app = builder.Build();
 app.UseExceptionHandler();
 // Configure the HTTP request pipeline.
@@ -63,6 +184,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// ✅ NEW: Rate limiting should run early (before controllers)
+app.UseRateLimiter();
+
+//Return a safe 429 message (without revealing limits)
+
 
 app.UseAuthorization();
 

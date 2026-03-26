@@ -25,9 +25,9 @@ namespace Infrastructure.Data.RepositoryImplementation
             return Task.CompletedTask;
         }
 
-        public Task<Order?> GetByUserIdAsync(Guid userId, CancellationToken ct)
+        public Task<Order?> GetByUserIdAsync(string userId, CancellationToken ct)
         {
-            return _dbSet.FirstOrDefaultAsync(o => o.UserId == userId, ct);
+            return _dbSet.FirstOrDefaultAsync(o => o.UserId.Equals(userId), ct);
         }
 
         public Task SaveChangesAsync(CancellationToken ct)

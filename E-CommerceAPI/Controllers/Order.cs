@@ -25,7 +25,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddOrder(Guid userId, string Address)
+        public async Task<IActionResult> AddOrder(string userId, string Address)
         {
             var command = new CreateOrderCommand(userId, Address);
             var order = await _mediator.Send(command);
@@ -50,7 +50,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetOrdersByUserId([FromRoute] Guid userId)
+        public async Task<IActionResult> GetOrdersByUserId([FromRoute] string userId)
         {
             var query = new GetOrdersByUserIdQuery(userId);
             var orders = await _mediator.Send(query);

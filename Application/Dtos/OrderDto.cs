@@ -10,7 +10,7 @@ namespace Application.Dtos
     public class OrderDto
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public string ShippingAddress { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public OrderStatus Status { get; set; }

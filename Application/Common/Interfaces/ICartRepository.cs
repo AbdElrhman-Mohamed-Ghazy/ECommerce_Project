@@ -9,7 +9,7 @@ namespace Application.Common.Interfaces
 {
     public interface ICartRepository
     {
-        Task<Cart?> GetByUserIdAsync(Guid userId, CancellationToken ct);
+        Task<Cart?> GetByUserIdAsync(string userId, CancellationToken ct);
         Task AddAsync(Cart cart, CancellationToken ct);
         Task UpdateAsync(Cart cart, CancellationToken ct);
     }

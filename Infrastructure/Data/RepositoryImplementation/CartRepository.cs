@@ -27,7 +27,7 @@ namespace Infrastructure.Data.RepositoryImplementation
             return Task.CompletedTask;
         }
 
-        public async Task<Cart?> GetByUserIdAsync(Guid userId, CancellationToken ct)
+        public async Task<Cart?> GetByUserIdAsync(string userId, CancellationToken ct)
         {
             return await _dbSet.Include(c => c.Items) .FirstOrDefaultAsync(c => c.UserId == userId, ct);
         }

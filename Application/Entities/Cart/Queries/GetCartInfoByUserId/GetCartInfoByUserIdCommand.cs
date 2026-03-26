@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Cart.Queries.GetCartByUserId
 {
-    public sealed record  GetCartInfoByUserIdCommand(Guid UserId) : IRequest<CartDto>
+    public sealed record  GetCartInfoByUserIdCommand(string UserId) : IRequest<CartDto>
     {
     }
 }

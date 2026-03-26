@@ -1,4 +1,4 @@
-﻿using Domain.Entities.Users;
+﻿using Domain.Entities.ApplicationUser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +10,12 @@ namespace Domain.Entities.Orders
     public class Order
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-        public User user { get; set; } = null!;
+        public string UserId { get; set; }
+        public ApplicationUser.ApplicationUser user { get; set; } = null!;
         public string ShippingAddress { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Order(Guid userId,  string shippingAddress)
+        public Order(string userId,  string shippingAddress)
         {
             UserId = userId;
             Id  = Guid.NewGuid();

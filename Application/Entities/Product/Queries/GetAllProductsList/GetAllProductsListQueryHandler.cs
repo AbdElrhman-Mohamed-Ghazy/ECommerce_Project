@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Dtos;
+using AutoMapper;
 using Domain.Entities.Products;
 using MediatR;
 using System;
@@ -12,22 +13,27 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Product.Queries.GetAllProductsList
 {
-    public sealed class GetAllProductsListQueryHandler(IProductRepository repository) : IRequestHandler<GetAllProductsListQuery, List<ProductDto>>
+    public sealed class GetAllProductsListQueryHandler(IProductRepository repository,IMapper mapper) : IRequestHandler<GetAllProductsListQuery, List<ProductDto>>
     {
         public async Task<List<ProductDto>> Handle(GetAllProductsListQuery request, CancellationToken cancellationToken)
         {
             var products = await repository.GetAllAsync();
             if (products == null || !products.Any())
             {
-               throw new NotFoundException(nameof(Product));
+                throw new NotFoundException(nameof(Product));
             }
-
-                Price = p.Price,
-                StockQuantity = p.StockQuantity,
-                CategoryId = p.CategoryId
-            }).ToList();
+            return mapper.Map<List<ProductDto>>(products);
+            //return products.Select(p => new ProductDto
+            //{
+            //    Id = p.Id,
+            //    Name = p.Name,
+            //    Description = p.Description,
+            //    Price = p.Price,
+            //    StockQuantity = p.StockQuantity,
+            //    CategoryId = p.CategoryId
+            //}).ToList();
         }
-    
+
 
     }
 }

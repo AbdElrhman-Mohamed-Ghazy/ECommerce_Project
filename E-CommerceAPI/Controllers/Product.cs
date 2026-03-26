@@ -7,6 +7,7 @@ using Application.Entities.Product.Queries.GetProductById;
 using Application.Entities.Product.Queries.GetProductsByCategory;
 using Application.Entities.Product.Queries.GetProductsByName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ namespace ECommerceAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class Product(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;

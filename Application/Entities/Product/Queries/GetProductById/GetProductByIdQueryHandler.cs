@@ -1,7 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Dtos;
-using AutoMapper;
 using Domain.Entities.Products;
 using MediatR;
 using System;
@@ -12,17 +11,26 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Product.Queries.GetProductById
 {
-    public sealed class GetProductByIdQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<GetProductByIdQuery, ProductDto?>
+    public sealed class GetProductByIdQueryHandler(IProductRepository repository) : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             var product = await repository.GetByIdAsync(request.Id, cancellationToken);
-            if (product == null )
+            if (product == null)
             {
                 throw new NotFoundException(nameof(Product));
             }
-            return mapper.Map<ProductDto>(product);
-      
+
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                CategoryId = product.CategoryId
+
+            };
         }
     }
 }

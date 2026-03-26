@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Cart.Commands.AddItemToCart
 {
-    public sealed record AddItemToCartCommand(Guid UserId,Guid ProductId,int Quantity) : IRequest;
+    public sealed record AddItemToCartCommand(string UserId,Guid ProductId,int Quantity) : IRequest;
 
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Entities.Order.Commands.CreateOrder
 {
-    public sealed record  CreateOrderCommand(Guid UserId,string Address):IRequest<Guid>
+    public sealed record  CreateOrderCommand(string UserId,string Address):IRequest<Guid>
     {
     }
 }

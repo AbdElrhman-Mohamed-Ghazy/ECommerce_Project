@@ -3,14 +3,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture_CQRS_inAction.Exceptions
+namespace ECommerceAPI.Exceptions
 {
     public sealed class GlobalExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
     {
-        public async ValueTask<bool> TryHandleAsync(
-            HttpContext httpContext,
-            Exception exception,
-            CancellationToken cancellationToken)
+        public async ValueTask<bool> TryHandleAsync( HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             // تحديد تفاصيل المشكلة بناءً على نوع الاستثناء
             ProblemDetails problem = exception switch

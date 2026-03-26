@@ -1,5 +1,5 @@
-﻿using Domain.Entities.CartItems;
-using Domain.Entities.Users;
+﻿using Domain.Entities.ApplicationUser;
+using Domain.Entities.CartItems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,14 +12,14 @@ namespace Domain.Entities
     public class Cart
     {
         public Guid Id { get; private set; }
-        public Guid UserId { get; private set; }
-        public User user { get; set; } = null!;
+        public string UserId { get; private set; }=string.Empty;
+        public ApplicationUser.ApplicationUser user { get; set; } = null!;
         private readonly List<CartItem> _items = new();
         public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 
         private Cart() { }
 
-        public Cart(Guid userId)
+        public Cart(string userId)
         {
             Id = Guid.NewGuid();
             UserId = userId;

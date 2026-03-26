@@ -10,7 +10,7 @@ namespace Application.Common.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<Order?> GetByUserIdAsync(Guid userId, CancellationToken ct);
+        Task<Order?> GetByUserIdAsync(string userId, CancellationToken ct);
         Task AddAsync(Order order, CancellationToken ct);
         Task UpdateAsync(Order order, CancellationToken ct);
         Task<Order?> GetByOrderIdAsync(Guid orderId, CancellationToken ct);

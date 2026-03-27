@@ -55,5 +55,37 @@ namespace ECommerceAPI.Controllers
 
             return Ok(result);
         }
+
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var result = await _userService.ConfirmEmailAsync(userId, token);
+
+            if (!result)
+                return BadRequest("Invalid token");
+
+            return Ok("Email confirmed successfully");
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var link = await _userService.GeneratePasswordResetTokenAsync(email);
+            if (!link.IsSuccess)
+                return BadRequest("Invalid Credition");
+
+            return Ok("Check console for reset link");
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto request)
+        {
+            var link = await _userService.ResetPasswordAsync(request);
+
+            if (!link.IsSuccess)
+                return BadRequest(link.Message);
+
+            return Ok(link.Message);
+        }
     }
 }

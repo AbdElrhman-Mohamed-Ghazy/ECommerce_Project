@@ -5,6 +5,7 @@ using Application.Entities.Category.Commands.UpdateCategory;
 using Application.Entities.Category.Queries.GetAllCategories;
 using Application.Entities.Category.Queries.GetCategoryById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCategory(CategoryDto categoryDto)
         {
             var command = new CreateCategoryCommand(categoryDto);
@@ -51,6 +53,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory([FromRoute] Guid categoryId, [FromBody] CategoryDto categoryDto)
         {
             var command = new UpdateCategoryCommand(categoryId, categoryDto);
@@ -62,6 +65,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(Guid categoryId)
         {
             var command = new DeleteCategoryCommand(categoryId);

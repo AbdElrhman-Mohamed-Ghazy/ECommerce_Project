@@ -3,6 +3,7 @@ using Application.Entities.ProductImage.Commands.AddProductImage;
 using Application.Entities.ProductImage.Commands.DeleteProductImage;
 using Application.Entities.ProductImage.Queries.GetProductImages;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace ECommerceAPI.Controllers
 {
     [ApiController]
     [Route("api/products/images")]
+    [Authorize(Roles = "Admin")]
     public class ProductImagesController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -24,6 +24,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllProducts()
         {
             var result = await _mediator.Send(new GetAllProductsListQuery());
@@ -33,6 +34,7 @@ namespace ECommerceAPI.Controllers
         [HttpGet("GetProductById/{productId:guid}", Name = "GetProductById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductById(Guid productId)
         {
             var result = await _mediator.Send(new GetProductByIdQuery(productId));
@@ -43,6 +45,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductByName(string productName)
         {
             var result = await _mediator.Send(new GetProductsByNameQuery(productName));
@@ -53,6 +56,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductByCategory(string categoryName)
         {
             var result = await _mediator.Send(new GetProductsByCategoryQuery(categoryName));
@@ -63,6 +67,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> AddProduct(ProductDto productDto)
         {
             var command = new CreateProductCommand(productDto);
@@ -75,6 +80,7 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] ProductDto productDto)
         {
             var command = new UpdateProductCommand(productId, productDto);
@@ -85,6 +91,7 @@ namespace ECommerceAPI.Controllers
         [HttpDelete("DeleteProductbyId/{productId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid productId)
         {

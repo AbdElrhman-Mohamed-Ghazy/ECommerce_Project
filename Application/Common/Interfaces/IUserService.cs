@@ -11,6 +11,8 @@ namespace Application.Common.Interfaces
         Task<bool> AddUserToRoleAsync(string userId, string role);
         Task<AuthResponse> RefreshTokenAsync(RefreshTokenRequestDto RefreshToken);
           Task<AuthResponse> LogoutAsync(string email);
-
+        Task<bool> ConfirmEmailAsync(string userId, string token);
+        Task<AuthResponse> GeneratePasswordResetTokenAsync(string email);
+        Task<AuthResponse> ResetPasswordAsync(ResetPasswordRequestDto request);
     }
 }

@@ -8,6 +8,7 @@ using Application.Entities.Order.Queries.GetOrdersByUserId;
 using Application.Entities.Product.Commands.CreateProduct;
 using Application.Entities.Product.Commands.UpdateProduct;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace ECommerceAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class Order(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;

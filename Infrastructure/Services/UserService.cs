@@ -60,15 +60,86 @@ public class UserService : IUserService
             };
         }
 
+
+
         await AddUserToRoleAsync(user.Id, request.Role);
+
+
+        // 🔥 هنا بقى الجديد
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var link = $"https://localhost:5001/api/auth/confirm-email?userId={user.Id}&token={token}";
+
+        // مؤقتًا هنطبعه (بدل ما نبعت إيميل)
+        Console.WriteLine(link);
 
         return new AuthResponse
         {
             IsSuccess = true,
-            Message = "User registered successfully"
+            Message = "User registered. Check console for confirmation link"
         };
+    
+}
+
+
+    public async Task<bool> ConfirmEmailAsync(string userId, string token)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null) return false;
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        return result.Succeeded;
     }
 
+    public async Task<AuthResponse> GeneratePasswordResetTokenAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)          return new AuthResponse { IsSuccess = false, };
+        
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var link = $"https://localhost:5001/api/auth/reset-password?email={email}&token={token}";
+
+        Console.WriteLine(link);
+
+        return new AuthResponse { IsSuccess = true, };
+        
+    }
+
+    public async Task<AuthResponse> ResetPasswordAsync(ResetPasswordRequestDto request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return new AuthResponse
+            {
+                IsSuccess = false,
+                Message = "Invalid Credential"
+            };
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+        if (!result.Succeeded)
+        {
+            return new AuthResponse
+            {
+                IsSuccess = false,
+                Message = string.Join(", ", result.Errors.Select(e => e.Description))
+            };
+        }
+
+        return new AuthResponse
+        {
+            IsSuccess = true,
+            Message = "Password Changed Successfully"
+        };
+    }
     public async Task<AuthResponse> LoginAsync(LoginRequestDto request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);

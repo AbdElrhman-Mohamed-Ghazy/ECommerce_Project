@@ -14,7 +14,6 @@ Designed for **scalability, maintainability, and security**, making it a solid f
   - Password reset / forgot password  
   - Refresh token support for secure session management  
 - **JWT Authentication & Role-Based Authorization**  
-- **Policy-Based Authorization** (e.g., `OwnerOrAdmin`)  
 - **Rate Limiting & CORS Protection** to prevent abuse  
 - Centralized **error handling & validation pipeline** (FluentValidation)  
 - Audit logging for sensitive operations  
@@ -83,8 +82,7 @@ Implemented using **defense-in-depth** strategy:
 
 ### Authorization
 - Role-Based Authorization (Admin vs User)  
-- Policy-Based Authorization (`OwnerOrAdmin`)  
-- IDOR Protection via ownership checks  
+- Protection via ownership checks  
 
 ### Infrastructure Hardening
 - Enforced HTTPS  

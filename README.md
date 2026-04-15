@@ -16,7 +16,8 @@ Designed for **scalability, maintainability, and security**, making it a solid f
 - **JWT Authentication & Role-Based Authorization**  
 - **Rate Limiting & CORS Protection** to prevent abuse  
 - Centralized **error handling & validation pipeline** (FluentValidation)  
-- Audit logging for sensitive operations  
+- Audit logging for sensitive operations
+- Caching using Redis and in-memory cache
 
 ---
 

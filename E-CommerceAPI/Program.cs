@@ -174,8 +174,25 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+    options.InstanceName = "E-Commerce:";
+});
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, HybridCacheService>();
+builder.Services.AddScoped<RedisCacheService>();
+builder.Services.AddOutputCache();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 var app = builder.Build();
+app.UseResponseCompression();
 app.UseExceptionHandler();
+app.UseOutputCache();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

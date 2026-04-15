@@ -19,7 +19,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-public class UserService : IUserService
+public partial class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
@@ -350,4 +350,5 @@ public class UserService : IUserService
             Message = "OK"
         };
     }
+
 }

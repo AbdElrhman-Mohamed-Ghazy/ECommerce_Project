@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace ECommerceAPI.Controllers
 {
@@ -21,6 +22,7 @@ namespace ECommerceAPI.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet("GetAllProducts")]
+        [OutputCache(Duration = 60)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

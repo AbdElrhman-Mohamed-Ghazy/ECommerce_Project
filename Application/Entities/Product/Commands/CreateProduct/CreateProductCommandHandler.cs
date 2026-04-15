@@ -9,7 +9,7 @@ using Domain.Entities.Products;
 
 namespace Application.Entities.Product.Commands.CreateProduct
 {
-    public class CreateProductCommandHandler(IProductRepository productRepository,IUnitOfWorkRepository unitOfWorkRepository) : IRequestHandler<CreateProductCommand, Guid>
+    public class CreateProductCommandHandler(IProductRepository productRepository,IUnitOfWorkRepository unitOfWorkRepository, ICacheService _cache) : IRequestHandler<CreateProductCommand, Guid>
     {
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
@@ -25,6 +25,7 @@ namespace Application.Entities.Product.Commands.CreateProduct
             };
             await productRepository.AddAsync(product, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
+            await _cache.RemoveAsync("products_all");
             return product.Id;
         }
     }

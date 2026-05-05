@@ -5,11 +5,11 @@ using Microsoft.Extensions.Caching.Memory;
 public class HybridCacheService : ICacheService
 {
     private readonly IMemoryCache _memoryCache;
-    private readonly ICacheService _redisCache;
+    private readonly RedisCacheService _redisCache;
 
     public HybridCacheService(
         IMemoryCache memoryCache,
-        ICacheService redisCache)
+        RedisCacheService redisCache)
     {
         _memoryCache = memoryCache;
         _redisCache = redisCache;

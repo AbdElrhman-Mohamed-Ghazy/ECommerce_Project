@@ -1,6 +1,7 @@
 ﻿using Application.Behaviors;
 using Application.Common.Interfaces;
 using Application.Dtos;
+using Application.Interfaces;
 using Application.Mapping;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
@@ -9,6 +10,9 @@ using ECommerceAPI.Exceptions;
 using FluentValidation;
 using Infrastructure.Data;
 using Infrastructure.Data.RepositoryImplementation;
+using Infrastructure.Identity;
+using Infrastructure.Services;
+using Infrastructure.Services.Email;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -86,7 +90,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, FakeEmailService>();
 
 
 builder.Services.AddAuthentication(options =>

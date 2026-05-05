@@ -1,9 +1,17 @@
-﻿using Application.Common.Interfaces;
-using Application.Dtos;
+﻿using Application.Features.Auth.Commands.AssignUserRole;
+using Application.Features.Auth.Commands.ConfirmEmail;
+using Application.Features.Auth.Commands.GeneratePasswordResetToken;
+using Application.Features.Auth.Commands.Login;
+using Application.Features.Auth.Commands.Logout;
+using Application.Features.Auth.Commands.RefreshToken;
+using Application.Features.Auth.Commands.RegisterUser;
+using Application.Features.Auth.Commands.ResetPassword;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace ECommerceAPI.Controllers
 {
@@ -12,19 +20,19 @@ namespace ECommerceAPI.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IMediator _mediator;
 
-        public AccountController(IUserService userService)
+        public AccountController(IMediator mediator)
         {
-            _userService = userService;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand request)
         {
-            var result = await _userService.RegisterAsync(request);
-            if (!result.IsSuccess) return BadRequest(result.Message);
-            return Ok("User registered successfully");
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess) return BadRequest(result.Errors);
+            return Ok(result.Value);
         }
 
         [HttpPost("login")]
@@ -34,58 +42,88 @@ namespace ECommerceAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> Login([FromBody] LoginCommand request)
         {
-            var result = await _userService.LoginAsync(request);
+            var result = await _mediator.Send(request);
 
-            if (!result.IsSuccess) return Unauthorized(result.Message);
-            return Ok(new { AccessToken = result.AccessToken , RefreshToken=result.RefreshToken});
+            if (!result.IsSuccess) return Unauthorized(result.Errors);
+            return Ok(result.Value);
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody]RefreshTokenRequestDto refreshToken)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand refreshToken)
         {
-            var token = await _userService.RefreshTokenAsync(refreshToken);
-            return Ok(token);
+            var result = await _mediator.Send(refreshToken);
+            if (!result.IsSuccess) return Unauthorized(result.Errors);
+            return Ok(result.Value);
         }
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutRequestDto request)
+        public async Task<IActionResult> Logout([FromBody] LogoutCommand request)
         {
-            var result = await _userService.LogoutAsync(request.Email);
-
-            return Ok(result);
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess) return BadRequest(result.Errors);
+            return Ok();
         }
 
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var result = await _userService.ConfirmEmailAsync(userId, token);
+            var decodedToken = DecodeToken(token);
+            var result = await _mediator.Send(new ConfirmEmailCommand { UserId = userId, Token = decodedToken });
 
-            if (!result)
-                return BadRequest("Invalid token");
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
 
             return Ok("Email confirmed successfully");
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword([FromBody] GeneratePasswordResetTokenCommand command)
         {
-            var link = await _userService.GeneratePasswordResetTokenAsync(email);
-            if (!link.IsSuccess)
-                return BadRequest("Invalid Credition");
+            var result = await _mediator.Send(command);
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
 
-            return Ok("Check console for reset link");
+            return Ok("Check your email for reset link");
         }
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto request)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request)
         {
-            var link = await _userService.ResetPasswordAsync(request);
+            var normalized = new ResetPasswordCommand
+            {
+                Email = DecodeToken(request.Email),
+                Token = DecodeToken(request.Token),
+                NewPassword = request.NewPassword
+            };
 
-            if (!link.IsSuccess)
-                return BadRequest(link.Message);
+            var result = await _mediator.Send(normalized);
 
-            return Ok(link.Message);
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
+
+            return Ok("Password changed successfully");
+        }
+
+        [HttpPost("assign-role")]
+        public async Task<IActionResult> AssignRole([FromBody] AssignUserRoleCommand request)
+        {
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess) return BadRequest(result.Errors);
+            return Ok();
+        }
+
+        private static string DecodeToken(string token)
+        {
+            try
+            {
+                var decoded = WebEncoders.Base64UrlDecode(token);
+                return Encoding.UTF8.GetString(decoded);
+            }
+            catch
+            {
+                return token;
+            }
         }
     }
 }

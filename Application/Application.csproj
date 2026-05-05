@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\AuthResponses\" />
     <Folder Include="Entities\OrderItem\Commands\" />
     <Folder Include="Entities\OrderItem\Queries\" />
   </ItemGroup>
